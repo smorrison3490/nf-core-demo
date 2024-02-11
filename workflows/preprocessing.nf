@@ -1,3 +1,4 @@
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     PRINT PARAMS SUMMARY
@@ -17,13 +18,7 @@ log.info """\
  * Quality control fastq
  */
 
-println "reads: $params.reads"
-
-reads_ch = Channel.fromFilePairs( params.reads, checkIfExists: true)
-
-reads_ch.view()
-    
-process fastqc {
+process FASTQC {
 
     publishDir "$params.outdir"
 
@@ -39,6 +34,12 @@ process fastqc {
     """
 }
 
-workflow {
-    fastqc(reads_ch)
+workflow PREPROCESSING {
+
+    take:
+    reads_ch
+
+    main:
+    FASTQC(reads_ch)
+
 }

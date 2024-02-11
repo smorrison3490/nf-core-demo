@@ -8,9 +8,7 @@ nextflow.enable.dsl = 2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-params.reads = WorkflowMain.getGenomeAttribute(params, 'reads')
-params.reference = WorkflowMain.getGenomeAttribute(params, 'reference')
-params.outdir = WorkflowMain.getGenomeAttribute(params, 'outdir')
+// NOT APPLICABLE
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -18,11 +16,13 @@ params.outdir = WorkflowMain.getGenomeAttribute(params, 'outdir')
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { PREPROCESSING } from './workflows/preprocessing'
+reads_ch = Channel.fromFilePairs( params.reads, checkIfExists: true)
+
+include { PREPROCESSING } from './workflows/preprocessing.nf'
 
 // WORKFLOW: Run main nf-core/sarek analysis pipeline
 workflow MYPIPELINE {
-    PREPROCESSING ()
+    PREPROCESSING (reads_ch)
 }
 
 /*
